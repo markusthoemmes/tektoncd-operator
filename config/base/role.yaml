@@ -66,7 +66,13 @@ rules:
   - statefulsets
   - deployments/finalizers
   verbs:
-  - '*'
+  - get
+  - list
+  - create
+  - update
+  - delete
+  - patch
+  - watch
 - apiGroups:
   - monitoring.coreos.com
   resources:
@@ -187,7 +193,13 @@ rules:
   - '*'
   - tektonaddons
   verbs:
-  - '*'
+  - get
+  - list
+  - create
+  - update
+  - delete
+  - patch
+  - watch
 - apiGroups:
   - tekton.dev
   - triggers.tekton.dev
@@ -195,14 +207,26 @@ rules:
   resources:
   - '*'
   verbs:
-  - '*'
+  - get
+  - list
+  - create
+  - update
+  - delete
+  - patch
+  - watch
 - apiGroups:
   - dashboard.tekton.dev
   resources:
   - '*'
   - tektonaddons
   verbs:
-  - '*'
+  - get
+  - list
+  - create
+  - update
+  - delete
+  - patch
+  - watch
 - apiGroups:
     - security.openshift.io
   resources:
