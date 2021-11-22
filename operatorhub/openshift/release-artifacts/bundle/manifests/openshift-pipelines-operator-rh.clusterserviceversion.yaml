@@ -241,7 +241,7 @@ spec:
     ### Components
 
 
-    - Tekton Pipelines: v0.28.1
+    - Tekton Pipelines: v0.28.0
 
     - Tekton Triggers: v0.16.0
 
@@ -259,6 +259,7 @@ spec:
     Tekton Pipelines cli project provides a CLI (tkn) for interacting with OpenShift
     Pipelines.
 
+    - [Download tkn for Linux](https://mirror.openshift.com/pub/openshift-v4/clients/pipeline/0.17.2/tkn-linux-amd64-0.17.2.tar.gz)
 
     [Download tkn](/command-line-tools) (links will be available on `command line
     tools` page after this operator is installed).
@@ -662,6 +663,7 @@ spec:
           - get
           - create
           - update
+          - delete
         - apiGroups:
           - route.openshift.io
           resources:
@@ -850,40 +852,6 @@ spec:
                 name: openshift-pipelines-operator
                 resources: {}
               serviceAccountName: openshift-pipelines-operator
-      - name: tekton-operator-webhook
-        spec:
-          replicas: 1
-          selector:
-            matchLabels:
-              name: tekton-operator-webhook
-          strategy: {}
-          template:
-            metadata:
-              labels:
-                app: tekton-operator
-                name: tekton-operator-webhook
-            spec:
-              containers:
-              - env:
-                - name: SYSTEM_NAMESPACE
-                  valueFrom:
-                    fieldRef:
-                      fieldPath: metadata.namespace
-                - name: CONFIG_LOGGING_NAME
-                  value: config-logging
-                - name: WEBHOOK_SERVICE_NAME
-                  value: tekton-operator-webhook
-                - name: WEBHOOK_SECRET_NAME
-                  value: tekton-operator-webhook-certs
-                - name: METRICS_DOMAIN
-                  value: tekton.dev/operator
-                image: registry.redhat.io/openshift-pipelines/pipelines-operator-webhook-rhel8@
-                name: tekton-operator-webhook
-                ports:
-                - containerPort: 8443
-                  name: https-webhook
-                resources: {}
-              serviceAccountName: openshift-pipelines-operator
     strategy: deployment
   installModes:
   - supported: false
@@ -957,38 +925,5 @@ spec:
     name: IMAGE_ADDONS_PARAM_TKN_IMAGE
   - image: registry.redhat.io/openshift-pipelines/pipelines-serve-tkn-cli-rhel8@
     name: IMAGE_ADDONS_TKN_CLI_SERVE
-  - image: registry.redhat.io/openshift-pipelines/pipelines-operator-webhook-rhel8@
-    name: TEKTON_OPERATOR_WEBHOOK
   replaces: 1.5.2
   version: 1.6.0
-  webhookdefinitions:
-  - admissionReviewVersions:
-    - v1beta1
-    - v1
-    containerPort: 443
-    deploymentName: tekton-operator-webhook
-    failurePolicy: Fail
-    generateName: config.webhook.operator.tekton.dev
-    sideEffects: None
-    targetPort: 8443
-    type: ValidatingAdmissionWebhook
-  - admissionReviewVersions:
-    - v1beta1
-    - v1
-    containerPort: 443
-    deploymentName: tekton-operator-webhook
-    failurePolicy: Fail
-    generateName: validation.webhook.operator.tekton.dev
-    sideEffects: None
-    targetPort: 8443
-    type: ValidatingAdmissionWebhook
-  - admissionReviewVersions:
-    - v1beta1
-    - v1
-    containerPort: 443
-    deploymentName: tekton-operator-webhook
-    failurePolicy: Fail
-    generateName: webhook.operator.tekton.dev
-    sideEffects: None
-    targetPort: 8443
-    type: MutatingAdmissionWebhook
